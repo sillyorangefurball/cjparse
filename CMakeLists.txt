@@ -1,13 +1,33 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(CJParse
+project(cjparse
 		VERSION 0.1.1
 		DESCRIPTION "JSON parser written in C"
-		LANGUAGES C)
+		LANGUAGES C
+)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_BUILD_TYPE Debug)
+set(CJPARSE_INCLUDE_DIRS "include")
 
-add_library(cjparse STATIC src/cjparse.c src/io.c src/populate.c src/valparse.c)
-target_include_directories(cjparse PUBLIC include)
-target_link_libraries(cjparse PRIVATE m)
+file(GLOB_RECURSE CJPARSE_SRC "src/*.c")
+file(GLOB_RECURSE CJPARSE_PUB_INCLUDE "include/*.h")
+
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE "Release")
+	message(STATUS "CMake build type not set, defaulting to Release")
+endif()
+
+add_library(${PROJECT_NAME} ${CJPARSE_SRC})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CJPARSE_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE m)
+
+set_target_properties(${PROJECT_NAME}
+	PROPERTIES
+	PUBLIC_HEADER "${CJPARSE_PUB_INCLUDE}"
+)
+
+install(TARGETS ${PROJECT_NAME}
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	PUBLIC_HEADER DESTINATION include/${PROJECT_NAME}
+)
