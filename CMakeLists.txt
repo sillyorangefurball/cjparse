@@ -13,7 +13,7 @@ file(GLOB_RECURSE CJPARSE_SRC "src/*.c")
 file(GLOB_RECURSE CJPARSE_PUB_INCLUDE "include/*.h")
 
 if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE "Release")
+	set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Default build type Release" FORCE)
 	message(STATUS "CMake build type not set, defaulting to Release")
 endif()
 
